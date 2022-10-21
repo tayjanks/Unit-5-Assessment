@@ -21,9 +21,18 @@ module.exports = {
 
     createCity: (req, res) => {
         const {name, rating, countryId} = req.body
-        sequelize.query(`insert into city (name, rating, countryID) 
+        sequelize.query(`insert into cities (name, rating, country_id) 
         values ('${name}', ${rating}, ${countryId})
         returning *;`)
+        .then(dbRes => res.status(200).send(dbRes[0]))
+        .catch(err => console.log(err))
+    },
+
+    getCities: (req, res) => {
+        sequelize.query(`select cit.city_id, cit.name AS city, cit.rating, count.country_id, count.name AS country
+        FROM cities as cit
+          JOIN countries as count
+            ON cit.country_id = count.country_id;`)
         .then(dbRes => res.status(200).send(dbRes[0]))
         .catch(err => console.log(err))
     },
