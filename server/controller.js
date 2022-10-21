@@ -19,6 +19,15 @@ module.exports = {
         .catch(err => console.log(err))
     },
 
+    createCity: (req, res) => {
+        const {name, rating, countryId} = req.body
+        sequelize.query(`insert into city (name, rating, countryID) 
+        values ('${name}', ${rating}, ${countryId})
+        returning *;`)
+        .then(dbRes => res.status(200).send(dbRes[0]))
+        .catch(err => console.log(err))
+    },
+
     seed: (req, res) => {
         sequelize.query(`
             drop table if exists cities;
